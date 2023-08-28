@@ -1,0 +1,65 @@
+
+const createPost = async (req, res) => {
+    try {
+        res.json({
+            status: "success",
+            data: "post created"
+        })
+    }catch (error) {
+        console.log(error.message);
+    }
+};
+
+const getPostById = async(req, res) => {
+    try {
+        res.json({
+            status: "success",
+            data: "post fetched successfully"
+        })
+    }catch (error) {
+        console.log(error.message);
+    }
+}
+
+const updatePostById  = async(req, res) => {
+    try {
+        res.json({
+            status: "success",
+            data:"post updated successfully"
+        })
+    }catch (error) {
+        console.log(error.message);
+    }
+}
+
+const deletePostById = async(req, res) => {
+    try {
+        res.json({
+            status: "success",
+            data: "post deleted successfully"
+        })
+    }catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+const getAllPosts = async(req, res) => {
+    try {
+        res.json({
+            status: "success",
+            data: "all posts data"
+        })
+    }catch (error) {
+        console.log(error.message);
+    }
+}
+
+
+module.exports = {
+    createPost, 
+    getPostById, 
+    updatePostById, 
+    deletePostById,
+    getAllPosts,
+}

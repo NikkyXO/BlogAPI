@@ -5,17 +5,17 @@ const { registerUser, loginUser, getUserById,
 const userRouter = express.Router();
 
 
-userRouter.post("/register", registerUser)
+userRouter.post("/register", registerUser);
 
-userRouter.post('/login', loginUser)   
+userRouter.post('/login', loginUser);   
 
 
-userRouter.get('/:id', getUserById)
+userRouter.get('/:id', getUserById);
 
-userRouter.put('/:id', updateUserById)
+userRouter.put('/:id', updateUserById);
 
-userRouter.delete('/:id', deleteUserById)
+userRouter.delete('/:id', deleteUserById);
 
-userRouter.get('/', getAllUsers)
+userRouter.get('/', getAllUsers);
 
 module.exports = userRouter;
