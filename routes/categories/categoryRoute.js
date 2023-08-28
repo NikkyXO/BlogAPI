@@ -1,64 +1,20 @@
 const express = require('express');
+const { 
+    createCategory, getCategoryById, 
+    updateCategoryById, deleteCategoryById, 
+    getAllCategories } = require('../../controllers/categories/categoryController');
 
 const categoryRouter = express.Router();
 
 
+categoryRouter.post('/create', createCategory);  
 
+categoryRouter.get('/:id', getCategoryById);
 
-categoryRouter.post('/create', async(req, res) => {
-    try {
-        res.json({
-            status: "success",
-            data: "category created"
-        })
-    }catch (error) {
-        console.log(error.message);
-    }
-})   
+categoryRouter.put('/:id', updateCategoryById);
 
+categoryRouter.delete('/:id', deleteCategoryById);
 
-categoryRouter.get('/:id', async(req, res) => {
-    try {
-        res.json({
-            status: "success",
-            data: "category fetched"
-        })
-    }catch (error) {
-        console.log(error.message);
-    }
-})
-
-categoryRouter.put('/:id', async(req, res) => {
-    try {
-        res.json({
-            status: "success",
-            data: "category updated"
-        })
-    }catch (error) {
-        console.log(error.message);
-    }
-})
-
-categoryRouter.delete('/:id', async(req, res) => {
-    try {
-        res.json({
-            status: "success",
-            data: "category deleted"
-        })
-    }catch (error) {
-        console.log(error.message);
-    }
-})
-
-categoryRouter.get('/', async(req, res) => {
-    try {
-        res.json({
-            status: "success",
-            data: "all categories data"
-        })
-    }catch (error) {
-        console.log(error.message);
-    }
-})
+categoryRouter.get('/', getAllCategories);
 
 module.exports = categoryRouter;
