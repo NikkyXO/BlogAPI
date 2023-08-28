@@ -1,73 +1,21 @@
 const express = require('express');
+const { registerUser, loginUser, getUserById, 
+    updateUserById, deleteUserById, getAllUsers } = require('../../controllers/users/userController');
 
 const userRouter = express.Router();
 
 
-userRouter.post("/register", async(req, res) => {
-    try {
-        res.json({
-            status: "success",
-            data: "user registered"
-        })
-    }catch (error) {
-        console.log(error.message);
-    }
-})
+userRouter.post("/register", registerUser)
 
-userRouter.post('/login', async(req, res) => {
-    try {
-        res.json({
-            status: "success",
-            data: "user logged in"
-        })
-    }catch (error) {
-        console.log(error.message);
-    }
-})   
+userRouter.post('/login', loginUser)   
 
 
-userRouter.get('/:id', async(req, res) => {
-    try {
-        res.json({
-            status: "success",
-            data: "profile"
-        })
-    }catch (error) {
-        console.log(error.message);
-    }
-})
+userRouter.get('/:id', getUserById)
 
-userRouter.put('/:id', async(req, res) => {
-    try {
-        res.json({
-            status: "success",
-            data: "profile"
-        })
-    }catch (error) {
-        console.log(error.message);
-    }
-})
+userRouter.put('/:id', updateUserById)
 
-userRouter.delete('/:id', async(req, res) => {
-    try {
-        res.json({
-            status: "success",
-            data: "profile"
-        })
-    }catch (error) {
-        console.log(error.message);
-    }
-})
+userRouter.delete('/:id', deleteUserById)
 
-userRouter.get('/', async(req, res) => {
-    try {
-        res.json({
-            status: "success",
-            data: "all profile data"
-        })
-    }catch (error) {
-        console.log(error.message);
-    }
-})
+userRouter.get('/', getAllUsers)
 
 module.exports = userRouter;
