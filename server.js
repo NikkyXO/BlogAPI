@@ -10,7 +10,11 @@ require("./config/dbConnect");
 const app = express();
 
 
+
 // MiddleWares
+
+app.use(express.json()); //pass incoming payload
+
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/posts", postRouter);
 app.use("/api/v1/comments", commentRouter);
