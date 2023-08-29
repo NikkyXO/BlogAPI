@@ -1,16 +1,19 @@
 const User = require('../../models/User/User');
 const bcrypt = require('bcryptjs');
 const generateToken = require('../../utils/generateToken');
+const getTokenFromHeader = require('../../utils/getTokenFromHeader');
+const {appError, AppError} = require('../../utils/appError');
 
 
 // Register User
-const registerUser = async (req, res) => {
+const registerUser = async (req, res, next) => {
     const {firstname, lastname, email, profilePhoto, password } = req.body;
     try {
         
         const userExists = await User.findOne({email});
         if (userExists) {
-            return res.json({msg: "User Already Exists"})
+            next(new AppError("User Already Exists", 400));
+
         } else {
             // hash password
             const salt = await bcrypt.genSalt(10);
@@ -32,12 +35,12 @@ const registerUser = async (req, res) => {
         }
         
     }catch (error) {
-        console.log(error.message);
+        next(appError("User Already Exists", 500));
     }
 };
 
 // Login User
-const loginUser = async(req, res) => {
+const loginUser = async(req, res, next) => {
     const {email, password} = req.body;
     try {
         // Check if email exists
@@ -51,9 +54,8 @@ const loginUser = async(req, res) => {
 
         if (!userExists  || !isPasswordMatched) {
             console.log("in condition loop");
-            res.json({
-                msg: "Invalid login credentials"
-            });
+            next(new AppError("Invalid login credentials", 401));
+           
         }
 
         res.json({
@@ -64,51 +66,67 @@ const loginUser = async(req, res) => {
             }
         })
     }catch (error) {
-        console.log(error.message);
+        next(appError(error.message, 500));
     }
 }
 
 // user profile
-const getUserById = async(req, res) => {
-    const {id} = req.params; 
-
+const getUserById = async(req, res, next) => {
+  
+    const userId = req.userAuth;
     try {
-        const userExists = await User.findById(id);
+        
+        const userExists = await User.findById(userId);
         if (userExists) {
             return res.json({
                 status: "success",
                 data: userExists
             })
         }
-        return res.json({
-            status: "failure",
-            data: "No such user exists"
-        })
+        next(new AppError("No such user exists", 404));
     }catch (error) {
-        console.log(error.message);
+        next(appError(error.message, 500));
     }
 }
 
-const updateUserById = async(req, res) => {
+const updateUserById = async(req, res, next) => {
+    const userId = req.userAuth;
+    const {firstname, lastname, profilePhoto } = req.body;
+    const userExists = await User.findById(userId);
     try {
-        res.json({
-            status: "success",
-            data: "profile"
-        })
+        if (userExists) {
+            userExists.firstname = firstname ? firstname : userExists.firstname;
+            userExists.lastname = lastname ? lastname : userExists.lastname;
+            userExists.profilePhoto = profilePhoto ? profilePhoto : userExists.profilePhoto;
+
+            await userExists.save();
+
+            return res.json({
+                status: "success",
+                data: "profile updated"
+            });
+        } else {
+            next(new AppError("User does not exists", 400));
+            // return res.json({
+            //     status: "failure",
+            //     data: "User does not exists"
+            // });
+        }
+        
     }catch (error) {
-        console.log(error.message);
+        next(appError(error.message, 500));
     }
 }
 
 const deleteUserById = async(req, res) => {
-    const {firstname, lastname, email, profilePhoto, password } = req.body;
+    const userId = req.userAuth;
     try {
         res.json({
             status: "success",
             data: "profile deleted"
         })
     }catch (error) {
-        console.log(error.message);
+        next(appError(error.message, 500));
     }
 }
 
@@ -119,7 +137,7 @@ const getAllUsers = async(req, res) => {
             data: "all profile data"
         })
     }catch (error) {
-        console.log(error.message);
+        next(appError(error.message, 500));
     }
 }
 

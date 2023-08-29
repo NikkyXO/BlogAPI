@@ -1,6 +1,10 @@
 const express = require('express');
-const { registerUser, loginUser, getUserById, 
-    updateUserById, deleteUserById, getAllUsers } = require('../../controllers/users/userController');
+const { 
+    registerUser, loginUser, 
+    getUserById, updateUserById, 
+    deleteUserById, getAllUsers 
+} = require('../../controllers/users/userController');
+const isLogin = require('../../middlewares/isLogin');
 
 const userRouter = express.Router();
 
@@ -9,13 +13,12 @@ userRouter.post("/register", registerUser);
 
 userRouter.post('/login', loginUser);   
 
+userRouter.get('/profile', isLogin, getUserById);
 
-userRouter.get('/:id', getUserById);
+userRouter.put('/:id', isLogin, updateUserById);
 
-userRouter.put('/:id', updateUserById);
+userRouter.delete('/:id', isLogin, deleteUserById);
 
-userRouter.delete('/:id', deleteUserById);
-
-userRouter.get('/', getAllUsers);
+userRouter.get('/', isLogin, getAllUsers);
 
 module.exports = userRouter;
