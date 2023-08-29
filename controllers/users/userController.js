@@ -1,5 +1,6 @@
 const User = require('../../models/User/User');
-const bcrypt = require("bcryptjs");
+const bcrypt = require('bcryptjs');
+const generateToken = require('../../utils/generateToken');
 
 
 // Register User
@@ -40,16 +41,15 @@ const loginUser = async(req, res) => {
     const {email, password} = req.body;
     try {
         // Check if email exists
-        const userExists = User.findOne({email});
+        const userExists = await User.findOne({ email });
 
         // validity of password
         const isPasswordMatched = await bcrypt.compare(
             password, 
             userExists.password
         );
-        console.log("password checked");
-        console.log(isPasswordMatched);
-        if (!userExist  || isPasswordMatched) {
+
+        if (!userExists  || !isPasswordMatched) {
             console.log("in condition loop");
             res.json({
                 msg: "Invalid login credentials"
@@ -58,18 +58,31 @@ const loginUser = async(req, res) => {
 
         res.json({
             status: "success",
-            data: "user logged in"
+            data: {
+                msg: "Log in successfully",
+                token: generateToken(userExists._id)
+            }
         })
     }catch (error) {
         console.log(error.message);
     }
 }
 
+// user profile
 const getUserById = async(req, res) => {
+    const {id} = req.params; 
+
     try {
-        res.json({
-            status: "success",
-            data: "profile"
+        const userExists = await User.findById(id);
+        if (userExists) {
+            return res.json({
+                status: "success",
+                data: userExists
+            })
+        }
+        return res.json({
+            status: "failure",
+            data: "No such user exists"
         })
     }catch (error) {
         console.log(error.message);
