@@ -6,7 +6,7 @@ const isLogin = (req, res, next) => {
 
     const token = getTokenFromHeader(req);
     if(!token) {
-        // console.log("falsy " + token);
+        console.log("falsy " + token);
         return res.json({
             message: "Authentication token not present in header",
         });

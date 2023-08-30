@@ -141,6 +141,49 @@ const getAllUsers = async(req, res) => {
     }
 }
 
+// Profile Photo Upload
+const uploadProfilePhoto = async(req, res, next) => {
+    const userId = req.userAuth;
+    console.log(req.file);
+
+    try {
+        const userExists = await User.findById(userId);
+        if (!userExists) {
+            return next(appError("User not Found", 404));
+        }
+        if (userExists.isBlocked) {
+            return next(appError("action not allowed, Your Account is blocked", 401));
+        }
+
+        // return res.json({
+        //     status: "success",
+        //     msg: "profile photo uploaded"
+        // });
+
+        if (req.file) {
+            console.log("path here: " ); //+ req.file.path
+            await userExists.findByIdAndUpdate(userId, {
+                $set: {
+                    profilePhoto: req.file.path,
+                },
+            },
+                {
+                    new: true
+                }
+            );
+            return res.json({
+                status: "success",
+                msg: "profile photo uploaded"
+            });
+        }
+        return next(appError("Error Occured while trying to upload file", 401));
+
+    } catch (error) {
+        next(appError(error.message, 500));
+    }
+    
+}
+
 
 module.exports = {
     registerUser, 
@@ -149,4 +192,5 @@ module.exports = {
     updateUserById, 
     deleteUserById,
     getAllUsers,
+    uploadProfilePhoto,
 }
