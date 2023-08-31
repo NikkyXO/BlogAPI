@@ -25,24 +25,7 @@ const isLogin = (req, res, next) => {
         }
        
     }
-    /*
-     } else {
-        const decodedUser = verifyToken(token);
-        if (!decodedUser) {
-            return res.json({
-                message: "Invalid Token",
-            }); 
-              
-        } else {
-            next();
-        }
-       
-    }
-    */
-    
-
-    // verify token
-    // save user into req object
+ 
 };
 
 module.exports = isLogin;

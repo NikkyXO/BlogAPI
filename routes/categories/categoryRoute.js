@@ -7,6 +7,7 @@ const {
 const categoryRouter = express.Router();
 
 
+
 categoryRouter.post('/create', createCategory);  
 
 categoryRouter.get('/:id', getCategoryById);

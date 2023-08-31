@@ -5,6 +5,7 @@ const commentRouter = require('./routes/comments/commentRoute');
 const categoryRouter = require('./routes/categories/categoryRoute');
 const globalErrorHandler = require('./middlewares/globalErrorHandler');
 const notFoundErrorHandler = require('./middlewares/notFoundErrorHandler');
+const isAdmin = require('./middlewares/isAdmin');
 require('dotenv').config();
 require("./config/dbConnect");
 
@@ -16,6 +17,8 @@ const app = express();
 // MiddleWares
 
 app.use(express.json()); //pass incoming payload
+
+// app.use(isAdmin)
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/posts", postRouter);
